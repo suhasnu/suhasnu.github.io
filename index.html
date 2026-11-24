@@ -253,9 +253,6 @@ section + section{border-top:1px solid var(--panel-line)}
 .proj h3{font-family:var(--display);font-weight:600;font-size:1.18rem;letter-spacing:-.015em;margin-bottom:10px;text-wrap:balance}
 .proj .desc{color:var(--muted);font-size:.93rem;margin-bottom:14px}
 .proj .note{color:var(--dim);font-size:.88rem;border-left:2px solid rgba(242,163,60,.45);padding-left:14px;margin-bottom:16px}
-.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:13px;margin:4px 0 18px}
-.shot{border:1px solid var(--panel-line);border-radius:12px;overflow:hidden;background:#060A10}
-.shot figcaption{font-size:.76rem;color:var(--dim);padding:10px 12px;border-top:1px solid var(--panel-line)}
 .kpis{display:flex;flex-wrap:wrap;gap:8px 28px;padding:15px 0;margin-bottom:16px;border-top:1px solid var(--panel-line);border-bottom:1px solid var(--panel-line)}
 .kpi .n{font-family:var(--mono);font-size:1.02rem;font-variant-numeric:tabular-nums;color:var(--ink)}
 .kpi .l{display:block;font-size:.73rem;color:var(--dim)}
@@ -509,16 +506,6 @@ footer .mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
           unemployment from Destatis, loaded into BigQuery, modelled with dbt, and published as a
           five-page Power BI report and a self-recalculating Excel briefing.
         </p>
-        <div class="shots">
-          <figure class="shot">
-            <img src="inside-germany.png" alt="Power BI page shading unemployment across 400 German districts beside a Bundesland ranking" loading="lazy" width="2747" height="1580">
-            <figcaption>District map, boundaries converted from the federal mapping agency and joined on the official district key</figcaption>
-          </figure>
-          <figure class="shot">
-            <img src="briefing-chart.png" alt="Excel chart comparing unemployment across six European geographies" loading="lazy" width="2049" height="1199">
-            <figcaption>Excel briefing: every visible number is a live formula driven by one report-month cell</figcaption>
-          </figure>
-        </div>
         <p class="note">
           Rates, index levels and survey balances share one fact table, so the base measure refuses to
           aggregate rather than quietly averaging them. Summing the 400 districts gives 2,787,125
