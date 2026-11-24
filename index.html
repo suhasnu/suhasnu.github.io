@@ -242,6 +242,8 @@ section + section{border-top:1px solid var(--panel-line)}
 .proj:hover::after{opacity:1}
 .proj.wide{grid-column:1/-1}
 .proj.gone{display:none}
+.proj.more{border-style:dashed;background:transparent}
+.proj.more h3{color:var(--muted)}
 .proj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
 .proj-no{font-family:var(--mono);font-size:1.05rem;color:rgba(143,198,255,.35);letter-spacing:.08em}
 .proj-ico{
@@ -552,6 +554,7 @@ footer .mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
       <article class="proj up" data-tags="ai">
         <div class="proj-top">
           <span class="proj-no">03</span>
+          <a class="proj-ico" href="https://github.com/suhasnu/durable-agent-runtime" aria-label="Durable Agent Runtime repository">&#8599;</a>
         </div>
         <h3>Durable Agent Runtime</h3>
         <p class="desc">
@@ -625,6 +628,7 @@ footer .mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
       <article class="proj up" data-tags="de">
         <div class="proj-top">
           <span class="proj-no">06</span>
+          <a class="proj-ico" href="https://github.com/suhasnu/Air-and-weather-quality-monitor" aria-label="Air and Weather Quality Monitor repository">&#8599;</a>
         </div>
         <h3>Air and Weather Quality Monitor</h3>
         <p class="desc">
@@ -638,6 +642,22 @@ footer .mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
         </div>
         <div class="tags">
           <span>Python</span><span>PostgreSQL</span><span>Supabase</span><span>Streamlit</span><span>Plotly</span>
+        </div>
+      </article>
+
+
+      <article class="proj up more" data-tags="all">
+        <div class="proj-top">
+          <span class="proj-no">&plus;</span>
+          <a class="proj-ico" href="https://github.com/suhasnu" aria-label="GitHub profile">&#8599;</a>
+        </div>
+        <h3>More on GitHub</h3>
+        <p class="desc">
+          Earlier work lives on my profile: the CNN thesis on 3D MR images, two further image
+          classification projects, and the academic papers repository.
+        </p>
+        <div class="tags">
+          <span>github.com/suhasnu</span>
         </div>
       </article>
 
