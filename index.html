@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suhas Nandihalli Umesh — Data Engineer</title>
+<meta name="description" content="Data engineer and Master's student in Data Science at Hochschule Fulda. Pipelines, warehouses and reports built end to end.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Instrument panel: a horizon grid under a full-height hero, then ruled sections on a deep navy ground. */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070B12;
+  --bg-2:#0B111B;
+  --panel:rgba(255,255,255,0.028);
+  --panel-line:rgba(170,195,225,0.11);
+  --ink:#E8EEF6;
+  --muted:#93A6BC;
+  --dim:#6A7C92;
+  --azure:#4DA3FF;
+  --azure-soft:#8FC6FF;
+  --amber:#F2A33C;
+  --mint:#4FD1A5;
+  --display:'Sora',system-ui,sans-serif;
+  --body:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--body);
+  line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+:focus-visible{outline:2px solid var(--azure);outline-offset:3px;border-radius:4px}
+::selection{background:rgba(77,163,255,.3)}
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#1C2838;border-radius:9px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:#2A3A4E}
+
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+@media(max-width:620px){.wrap{padding:0 20px}}
+
+/* ---------- scroll progress ---------- */
+#progress{
+  position:fixed;top:0;left:0;height:2px;width:0;z-index:200;
+  background:linear-gradient(90deg,var(--azure),var(--mint),var(--amber));
+}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(7,11,18,.72);backdrop-filter:blur(16px);
+  border-bottom:1px solid transparent;transition:border-color .3s,background .3s;
+}
+nav.stuck{border-bottom-color:var(--panel-line);background:rgba(7,11,18,.9)}
+.nav-in{display:flex;align-items:center;gap:26px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;margin-right:auto}
+.logo-mark{
+  width:30px;height:30px;border-radius:8px;flex:none;
+  background:linear-gradient(135deg,var(--azure),#2B6FB5);
+  display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:500;color:#04101D;
+}
+.logo-text{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.01em}
+.nav-links{display:flex;gap:26px;list-style:none}
+.nav-links a{
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);transition:color .25s;position:relative;padding:4px 0;
+}
+.nav-links a::after{
+  content:'';position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--azure);
+  transform:scaleX(0);transform-origin:left;transition:transform .25s ease;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--azure)}
+.nav-links a.active::after{transform:scaleX(1)}
+@media(max-width:860px){.nav-links{display:none}}
+.nav-cta{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 16px;border:1px solid var(--panel-line);border-radius:999px;color:var(--muted);
+  transition:color .25s,border-color .25s,background .25s;white-space:nowrap;
+}
+.nav-cta:hover{color:var(--ink);border-color:var(--azure);background:rgba(77,163,255,.08)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:110px 0 80px;overflow:hidden}
+#grid-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero::after{
+  content:'';position:absolute;inset:auto 0 0 0;height:45%;z-index:1;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,var(--bg) 88%);
+}
+.hero-in{position:relative;z-index:2;width:100%}
+.badge{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:7px 16px;border:1px solid rgba(79,209,165,.32);border-radius:999px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);
+  margin-bottom:32px;background:rgba(79,209,165,.06);
+}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:blip 2.4s ease-in-out infinite}
+@keyframes blip{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(79,209,165,.5)}50%{opacity:.65;box-shadow:0 0 0 7px rgba(79,209,165,0)}}
+
+.hero h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(2.4rem,7.2vw,5.1rem);line-height:1.02;letter-spacing:-.035em;
+  margin-bottom:10px;text-wrap:balance;
+}
+.hero h1 .sur{
+  display:block;
+  background:linear-gradient(104deg,var(--azure) 8%,var(--azure-soft) 42%,var(--amber) 96%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .role{
+  font-family:var(--mono);font-size:clamp(.78rem,1.6vw,.95rem);letter-spacing:.26em;
+  text-transform:uppercase;color:var(--muted);margin:18px 0 26px;
+}
+.hero .role b{color:var(--azure);font-weight:500}
+.hero .intro{color:var(--muted);max-width:60ch;font-size:clamp(1rem,1.8vw,1.1rem);margin-bottom:38px}
+.hero .intro strong{color:var(--ink);font-weight:500}
+
+.cta{display:flex;flex-wrap:wrap;gap:13px;margin-bottom:62px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;padding:13px 26px;border-radius:10px;
+  font-family:var(--body);font-weight:600;font-size:.94rem;
+  border:1px solid var(--panel-line);background:var(--panel);color:var(--ink);
+  transition:transform .22s cubic-bezier(.2,.8,.3,1),border-color .22s,background .22s;
+}
+.btn:hover{transform:translateY(-3px);border-color:rgba(77,163,255,.5);background:rgba(77,163,255,.07)}
+.btn-main{background:var(--azure);border-color:var(--azure);color:#04101D}
+.btn-main:hover{background:var(--azure-soft);border-color:var(--azure-soft)}
+.arrow{transition:transform .22s}
+.btn:hover .arrow{transform:translateX(3px)}
+
+.readout{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));
+  border-top:1px solid var(--panel-line);
+}
+.ro{padding:22px 24px 4px 0;border-right:1px solid var(--panel-line)}
+.ro:last-child{border-right:none}
+@media(max-width:620px){.ro{border-right:none;padding-right:0}}
+.ro .n{font-family:var(--mono);font-size:clamp(1.5rem,3.4vw,2rem);font-weight:500;font-variant-numeric:tabular-nums;line-height:1.1}
+.ro .l{display:block;font-size:.78rem;color:var(--dim);margin-top:5px;letter-spacing:.02em}
+
+.scroll-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--dim);
+}
+.scroll-hint i{display:block;width:1px;height:42px;background:linear-gradient(var(--azure),transparent);animation:drop 2.6s ease-in-out infinite}
+@keyframes drop{0%,100%{opacity:.25;transform:scaleY(.55);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}
+@media(max-height:720px){.scroll-hint{display:none}}
+
+/* ---------- section scaffolding ---------- */
+section{padding:112px 0;position:relative}
+section + section{border-top:1px solid var(--panel-line)}
+.sec-top{margin-bottom:52px;max-width:720px}
+.sec-tag{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--azure);display:flex;align-items:center;gap:11px;margin-bottom:14px;
+}
+.sec-tag::before{content:'';width:26px;height:1px;background:var(--azure)}
+.sec-top h2{
+  font-family:var(--display);font-weight:700;font-size:clamp(1.8rem,4.2vw,2.7rem);
+  letter-spacing:-.025em;line-height:1.14;margin-bottom:14px;text-wrap:balance;
+}
+.sec-top p{color:var(--muted);font-size:1.02rem;max-width:62ch}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:start}
+@media(max-width:880px){.about{grid-template-columns:1fr;gap:38px}}
+.about p{color:var(--muted);margin-bottom:17px}
+.about p strong{color:var(--ink);font-weight:500}
+.panelcards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pc{
+  background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;padding:22px 20px;
+  transition:transform .28s cubic-bezier(.2,.8,.3,1),border-color .28s,background .28s;
+}
+.pc:hover{transform:translateY(-4px);border-color:rgba(77,163,255,.42);background:rgba(77,163,255,.05)}
+.pc .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.pc .v{font-family:var(--display);font-weight:700;font-size:1.28rem;margin-top:7px;letter-spacing:-.01em}
+.pc .v em{font-style:normal;color:var(--azure)}
+
+/* ---------- timeline ---------- */
+.timeline{position:relative;padding-left:34px}
+.timeline::before{
+  content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1px;
+  background:linear-gradient(to bottom,var(--azure),rgba(77,163,255,.18) 70%,transparent);
+}
+.tl{position:relative;margin-bottom:30px}
+.tl:last-child{margin-bottom:0}
+.tl::before{
+  content:'';position:absolute;left:-34px;top:24px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--azure);box-shadow:0 0 0 4px rgba(77,163,255,.12);
+}
+.tl-card{
+  background:var(--panel);border:1px solid var(--panel-line);border-radius:16px;padding:26px 28px;
+  transition:transform .28s cubic-bezier(.2,.8,.3,1),border-color .28s;
+}
+.tl-card:hover{transform:translateX(5px);border-color:rgba(77,163,255,.4)}
+.tl-head{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+.tl-role{font-family:var(--display);font-weight:600;font-size:1.1rem;letter-spacing:-.01em}
+.tl-when{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--amber);
+  border:1px solid rgba(242,163,60,.3);background:rgba(242,163,60,.07);
+  padding:3px 11px;border-radius:999px;white-space:nowrap;
+}
+.tl-org{color:var(--azure);font-size:.9rem;font-weight:500;margin-bottom:14px}
+.tl-card ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.tl-card li{color:var(--muted);font-size:.93rem;padding-left:20px;position:relative;line-height:1.68}
+.tl-card li::before{content:'';position:absolute;left:0;top:.72em;width:7px;height:1px;background:var(--dim)}
+
+/* ---------- projects ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:34px}
+.chip{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;cursor:pointer;
+  padding:8px 16px;border-radius:999px;background:transparent;
+  border:1px solid var(--panel-line);color:var(--dim);
+  transition:color .22s,border-color .22s,background .22s;
+}
+.chip:hover{color:var(--ink);border-color:var(--muted)}
+.chip[aria-pressed="true"]{color:var(--azure);border-color:rgba(77,163,255,.55);background:rgba(77,163,255,.1)}
+
+.projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.proj{
+  position:relative;display:flex;flex-direction:column;overflow:hidden;
+  background:var(--panel);border:1px solid var(--panel-line);border-radius:18px;padding:28px;
+  transition:transform .3s cubic-bezier(.2,.8,.3,1),border-color .3s,background .3s;
+}
+.proj::after{
+  content:'';position:absolute;inset:0 0 auto 0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--azure),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.proj:hover{transform:translateY(-5px);border-color:rgba(77,163,255,.4);background:rgba(77,163,255,.04)}
+.proj:hover::after{opacity:1}
+.proj.wide{grid-column:1/-1}
+.proj.gone{display:none}
+.proj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+.proj-no{font-family:var(--mono);font-size:1.05rem;color:rgba(143,198,255,.35);letter-spacing:.08em}
+.proj-ico{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none;
+  border:1px solid var(--panel-line);background:rgba(255,255,255,.03);color:var(--muted);
+  font-family:var(--mono);font-size:13px;transition:color .22s,border-color .22s,background .22s;
+}
+.proj-ico:hover{color:var(--azure);border-color:rgba(77,163,255,.5);background:rgba(77,163,255,.1)}
+.proj h3{font-family:var(--display);font-weight:600;font-size:1.18rem;letter-spacing:-.015em;margin-bottom:10px;text-wrap:balance}
+.proj .desc{color:var(--muted);font-size:.93rem;margin-bottom:14px}
+.proj .note{color:var(--dim);font-size:.88rem;border-left:2px solid rgba(242,163,60,.45);padding-left:14px;margin-bottom:16px}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:13px;margin:4px 0 18px}
+.shot{border:1px solid var(--panel-line);border-radius:12px;overflow:hidden;background:#060A10}
+.shot figcaption{font-size:.76rem;color:var(--dim);padding:10px 12px;border-top:1px solid var(--panel-line)}
+.kpis{display:flex;flex-wrap:wrap;gap:8px 28px;padding:15px 0;margin-bottom:16px;border-top:1px solid var(--panel-line);border-bottom:1px solid var(--panel-line)}
+.kpi .n{font-family:var(--mono);font-size:1.02rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.kpi .l{display:block;font-size:.73rem;color:var(--dim)}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
+.tags span{
+  font-family:var(--mono);font-size:10.5px;padding:4px 10px;border-radius:999px;
+  background:rgba(143,198,255,.06);border:1px solid rgba(143,198,255,.16);color:var(--azure-soft);
+}
+.tags span.warm{background:rgba(242,163,60,.07);border-color:rgba(242,163,60,.2);color:var(--amber)}
+.locked{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:auto}
+
+/* ---------- skills ---------- */
+.skillset{display:flex;flex-direction:column;gap:30px}
+.skill-head{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.pill{
+  padding:9px 18px;border-radius:999px;font-size:.87rem;
+  background:var(--panel);border:1px solid var(--panel-line);color:var(--ink);
+  transition:transform .22s,border-color .22s,background .22s;
+}
+.pill:hover{transform:translateY(-3px);border-color:rgba(77,163,255,.45);background:rgba(77,163,255,.08)}
+
+/* ---------- certs ---------- */
+.certs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.cert{
+  position:relative;overflow:hidden;background:var(--panel);
+  border:1px solid var(--panel-line);border-radius:16px;padding:26px;
+  transition:transform .28s,border-color .28s;
+}
+.cert::before{content:'';position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,var(--azure),var(--mint))}
+.cert:hover{transform:translateY(-4px);border-color:rgba(79,209,165,.4)}
+.cert .nm{font-family:var(--display);font-weight:600;font-size:1rem;margin-bottom:5px;letter-spacing:-.01em}
+.cert .is{color:var(--azure);font-size:.84rem;margin-bottom:13px}
+.cert .bd{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;
+  padding:4px 11px;border-radius:999px;background:rgba(79,209,165,.08);
+  border:1px solid rgba(79,209,165,.28);color:var(--mint);
+}
+
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
+@media(max-width:880px){.contact{grid-template-columns:1fr;gap:34px}}
+.contact h3{font-family:var(--display);font-weight:700;font-size:1.6rem;letter-spacing:-.02em;line-height:1.3;margin-bottom:16px}
+.contact p{color:var(--muted);margin-bottom:14px}
+.avail{
+  border-left:2px solid var(--mint);padding:4px 0 4px 16px;margin-top:22px;
+  color:var(--ink);font-size:.93rem;
+}
+.avail span{display:block;color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.links{display:flex;flex-direction:column;gap:12px}
+.lnk{
+  display:flex;align-items:center;gap:16px;padding:17px 20px;border-radius:14px;
+  background:var(--panel);border:1px solid var(--panel-line);
+  transition:transform .26s cubic-bezier(.2,.8,.3,1),border-color .26s,background .26s;
+}
+.lnk:hover{transform:translateX(6px);border-color:rgba(77,163,255,.45);background:rgba(77,163,255,.06)}
+.lnk .ic{
+  width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex:none;
+  font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.04em;
+  background:rgba(77,163,255,.12);border:1px solid rgba(77,163,255,.25);color:var(--azure-soft);
+}
+.lnk .ic.w{background:rgba(242,163,60,.11);border-color:rgba(242,163,60,.26);color:var(--amber)}
+.lnk b{display:block;font-weight:600;font-size:.95rem}
+.lnk s{display:block;text-decoration:none;color:var(--dim);font-size:.82rem;word-break:break-all}
+
+footer{
+  border-top:1px solid var(--panel-line);padding:32px 0 44px;
+  display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:space-between;
+  color:var(--dim);font-size:.83rem;
+}
+footer .mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+
+/* ---------- reveal ---------- */
+.up{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.3,1)}
+.up.seen{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.up{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top">
+      <span class="logo-mark">SU</span>
+      <span class="logo-text">Suhas N. Umesh</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#certifications">Certificates</a></li>
+    </ul>
+    <a class="nav-cta" href="#contact">Get in touch</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="grid-canvas" aria-hidden="true"></canvas>
+  <div class="wrap hero-in">
+    <span class="badge"><i class="pulse"></i>Open to working student &amp; internship roles</span>
+    <h1>Suhas Nandihalli Umesh<span class="sur">builds data systems end to end.</span></h1>
+    <p class="role">Data Engineering <b>/</b> Analytics <b>/</b> Applied AI</p>
+    <p class="intro">
+      Master&rsquo;s student in Data Science at Hochschule Fulda and a former
+      <strong>Junior Data Engineer</strong> working with Airflow, dbt and BigQuery.
+      I build pipelines, warehouses and reports from scratch, then test them until they
+      behave when the data misbehaves.
+    </p>
+    <div class="cta">
+      <a class="btn btn-main" href="#projects">View the work <span class="arrow">&rarr;</span></a>
+      <a class="btn" href="https://github.com/suhasnu">GitHub</a>
+      <a class="btn" href="mailto:suhas3908@gmail.com">Email me</a>
+    </div>
+
+    <div class="readout">
+      <div class="ro"><span class="n" data-to="1799">0</span><span class="l">backfill tasks, zero failures</span></div>
+      <div class="ro"><span class="n" data-to="400">0</span><span class="l">German districts mapped</span></div>
+      <div class="ro"><span class="n" data-to="240" data-suffix="+">0</span><span class="l">automated tests written</span></div>
+      <div class="ro"><span class="n" data-to="6">0</span><span class="l">projects built end to end</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><i></i></div>
+</header>
+
+<main>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-top up">
+      <div class="sec-tag">Who I am</div>
+      <h2>I care about the pipeline that still runs on a bad day.</h2>
+    </div>
+    <div class="about">
+      <div class="up">
+        <p>
+          I came to data engineering through a year of it as a job. At <strong>Apponix Technologies</strong>
+          in Bengaluru I worked on Airflow, dbt and BigQuery over production PostgreSQL databases and
+          third-party SaaS APIs, which is where I learned that most of the work is not writing the
+          transformation, it is making the thing survive late data, changed schemas and reruns.
+        </p>
+        <p>
+          Since moving to Germany for my Master&rsquo;s at <strong>Hochschule Fulda</strong>, I have built
+          several systems from scratch rather than from tutorials: an electricity market platform with
+          a streaming path measured against its own batch path, an economic analytics project spanning
+          two statistics authorities, and an agent runtime that survives being killed mid-run.
+        </p>
+        <p>
+          The thread through all of them is the same: <strong>I would rather a system refuse than guess</strong>.
+          Measures that return blank when a question is ambiguous, markers that are never read as zero,
+          tests that record a discrepancy instead of hiding it.
+        </p>
+      </div>
+      <div class="panelcards up">
+        <div class="pc"><span class="k">Based in</span><div class="v">Fulda, <em>Hessen</em></div></div>
+        <div class="pc"><span class="k">Studying</span><div class="v">M.Sc. <em>Data Science</em></div></div>
+        <div class="pc"><span class="k">Experience</span><div class="v"><em>1.5</em> years</div></div>
+        <div class="pc"><span class="k">Languages</span><div class="v">EN <em>C1</em> &middot; DE <em>B1</em></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-top up">
+      <div class="sec-tag">Work history</div>
+      <h2>Experience</h2>
+    </div>
+    <div class="timeline">
+
+      <div class="tl up">
+        <div class="tl-card">
+          <div class="tl-head">
+            <span class="tl-role">Junior Data Engineer</span>
+            <span class="tl-when">Mar 2024 &ndash; Mar 2025</span>
+          </div>
+          <div class="tl-org">Apponix Technologies, Bengaluru</div>
+          <ul>
+            <li>Built and maintained Airflow pipelines loading PostgreSQL application databases and third-party SaaS APIs into BigQuery.</li>
+            <li>Modelled the warehouse layer in dbt, with tests as part of the build rather than an afterthought.</li>
+            <li>Worked through the ordinary hard parts: late-arriving data, schema changes at source, and reruns that must not double-count.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl up">
+        <div class="tl-card">
+          <div class="tl-head">
+            <span class="tl-role">Data Engineering Intern</span>
+            <span class="tl-when">Sep 2023 &ndash; Feb 2024</span>
+          </div>
+          <div class="tl-org">Apponix Technologies, Bengaluru</div>
+          <ul>
+            <li>Joined during my final B.E. semester, taking over existing pipelines through a handover period.</li>
+            <li>Moved to the full-time engineering role after my exams.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl up">
+        <div class="tl-card">
+          <div class="tl-head">
+            <span class="tl-role">Team Lead, industry project with JUMO GmbH</span>
+            <span class="tl-when">2026</span>
+          </div>
+          <div class="tl-org">Hochschule Fulda &middot; module graded 1.7</div>
+          <ul>
+            <li>Led a team of five on laser trimming of platinum thin-film temperature sensors, across 862 production orders from the plant database.</li>
+            <li>Ran the modelling, evaluation and reproducibility work: DVC pipeline, MLflow tracking, a Dockerised FastAPI service and a Streamlit demo.</li>
+            <li>Reported a negative result honestly: operators already matched the optimum, so the system formalises existing knowledge rather than raising yield.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-top up">
+      <div class="sec-tag">What I have built</div>
+      <h2>Projects</h2>
+      <p>Built from scratch, not from a template. Every figure below comes from the repository.</p>
+    </div>
+
+    <div class="filters up" role="group" aria-label="Filter projects">
+      <button class="chip" data-f="all" aria-pressed="true">All</button>
+      <button class="chip" data-f="bi" aria-pressed="false">Power BI &amp; Excel</button>
+      <button class="chip" data-f="de" aria-pressed="false">Data engineering</button>
+      <button class="chip" data-f="ai" aria-pressed="false">LLM &amp; agents</button>
+      <button class="chip" data-f="ml" aria-pressed="false">Machine learning</button>
+    </div>
+
+    <div class="projects" id="projects-grid">
+
+      <article class="proj wide up" data-tags="bi de">
+        <div class="proj-top">
+          <span class="proj-no">01</span>
+          <a class="proj-ico" href="https://github.com/suhasnu/eu-economy-analytics" aria-label="EU Economy Analytics repository">&#8599;</a>
+        </div>
+        <h3>EU Economy Analytics</h3>
+        <p class="desc">
+          Five monthly Eurostat indicators for Germany and five comparators, plus German regional
+          unemployment from Destatis, loaded into BigQuery, modelled with dbt, and published as a
+          five-page Power BI report and a self-recalculating Excel briefing.
+        </p>
+        <div class="shots">
+          <figure class="shot">
+            <img src="inside-germany.png" alt="Power BI page shading unemployment across 400 German districts beside a Bundesland ranking" loading="lazy" width="2747" height="1580">
+            <figcaption>District map, boundaries converted from the federal mapping agency and joined on the official district key</figcaption>
+          </figure>
+          <figure class="shot">
+            <img src="briefing-chart.png" alt="Excel chart comparing unemployment across six European geographies" loading="lazy" width="2049" height="1199">
+            <figcaption>Excel briefing: every visible number is a live formula driven by one report-month cell</figcaption>
+          </figure>
+        </div>
+        <p class="note">
+          Rates, index levels and survey balances share one fact table, so the base measure refuses to
+          aggregate rather than quietly averaging them. Summing the 400 districts gives 2,787,125
+          against a published national figure of 2,787,112, and a test records that difference instead
+          of hiding it.
+        </p>
+        <div class="kpis">
+          <div class="kpi"><span class="n">2</span><span class="l">statistics APIs</span></div>
+          <div class="kpi"><span class="n">400</span><span class="l">districts mapped</span></div>
+          <div class="kpi"><span class="n">5</span><span class="l">report pages in version control</span></div>
+          <div class="kpi"><span class="n">11</span><span class="l">years of regional data</span></div>
+        </div>
+        <div class="tags">
+          <span class="warm">Power BI</span><span class="warm">Excel</span><span>Python</span><span>BigQuery</span>
+          <span>dbt</span><span>DuckDB</span><span>TMDL / PBIR</span><span>Pandera</span><span>pytest</span>
+        </div>
+      </article>
+
+      <article class="proj up" data-tags="de">
+        <div class="proj-top">
+          <span class="proj-no">02</span>
+          <a class="proj-ico" href="https://github.com/suhasnu/entsoe-data-platform" aria-label="ENTSO-E Data Platform repository">&#8599;</a>
+        </div>
+        <h3>ENTSO-E Data Platform</h3>
+        <p class="desc">
+          A daily ELT for six European electricity bidding zones: Airflow into BigQuery, a dbt star
+          schema on a DST-correct hourly grain, and a second path through Kafka and Spark Structured
+          Streaming measured against the batch pipeline on identical days.
+        </p>
+        <p class="note">
+          The backfill was the real test: 1,799 task instances with no failures, after working through
+          genuine memory limits rather than shrinking the window until it fit.
+        </p>
+        <div class="kpis">
+          <div class="kpi"><span class="n">1,799</span><span class="l">tasks, zero failures</span></div>
+          <div class="kpi"><span class="n">27</span><span class="l">dbt tests</span></div>
+          <div class="kpi"><span class="n">6</span><span class="l">bidding zones</span></div>
+        </div>
+        <div class="tags">
+          <span>Airflow</span><span>Kafka</span><span>Spark</span><span>Terraform</span><span>dbt</span><span>BigQuery</span>
+        </div>
+      </article>
+
+      <article class="proj up" data-tags="ai">
+        <div class="proj-top">
+          <span class="proj-no">03</span>
+        </div>
+        <h3>Durable Agent Runtime</h3>
+        <p class="desc">
+          An agent runtime written without a framework: a typed state graph, SQLite checkpointing and
+          write-ahead logging of every tool call, so a killed process resumes without repeating side
+          effects and refuses undecidable cases for a human instead of guessing.
+        </p>
+        <p class="note">
+          I ported the same agent to LangGraph and compared the two. On the crash the runtime survives,
+          the port charged twice. That comparison is the point of the project.
+        </p>
+        <div class="kpis">
+          <div class="kpi"><span class="n">126</span><span class="l">offline tests, CI on push</span></div>
+          <div class="kpi"><span class="n">0</span><span class="l">frameworks in the core</span></div>
+        </div>
+        <div class="tags">
+          <span>Python</span><span>pydantic</span><span>SQLite</span><span class="warm">LangGraph</span>
+        </div>
+      </article>
+
+      <article class="proj up" data-tags="ai de">
+        <div class="proj-top">
+          <span class="proj-no">04</span>
+          <a class="proj-ico" href="https://github.com/suhasnu/MCP_Agent_Multi_tool_AI_Assistent" aria-label="Multi-tool weather agent repository">&#8599;</a>
+        </div>
+        <h3>Multi-tool Weather Agent</h3>
+        <p class="desc">
+          An agent answering German weather questions by writing SQL against a DuckDB warehouse built
+          from DWD station archives, combined with live forecast data. Two custom MCP servers, a
+          FastAPI gateway with SSE streaming, and a Streamlit interface.
+        </p>
+        <p class="note">
+          Read-only SQL is enforced at the DuckDB engine rather than by matching strings, and a
+          14-check quality gate guards the bronze to gold layers.
+        </p>
+        <div class="kpis">
+          <div class="kpi"><span class="n">114</span><span class="l">test cases, offline</span></div>
+          <div class="kpi"><span class="n">~94%</span><span class="l">tool-selection accuracy</span></div>
+          <div class="kpi"><span class="n">17</span><span class="l">graded scenarios</span></div>
+        </div>
+        <div class="tags">
+          <span>MCP</span><span>DuckDB</span><span>FastAPI</span><span>Streamlit</span><span class="warm">LLM eval</span>
+        </div>
+      </article>
+
+      <article class="proj up" data-tags="ml">
+        <div class="proj-top">
+          <span class="proj-no">05</span>
+        </div>
+        <h3>Nominal Correction for Laser Trimming</h3>
+        <p class="desc">
+          Industry project with JUMO GmbH &amp; Co. KG on platinum thin-film temperature sensors,
+          covering 862 production orders. I led the team and ran the modelling, evaluation and
+          reproducibility work.
+        </p>
+        <p class="note">
+          A persistence rule beat five model families in six of nine cells, and no fitted model won
+          below 124 orders. Reporting that plainly was worth more than a better-looking score.
+        </p>
+        <div class="kpis">
+          <div class="kpi"><span class="n">862</span><span class="l">production orders</span></div>
+          <div class="kpi"><span class="n">0.996</span><span class="l">measured correlation</span></div>
+          <div class="kpi"><span class="n">1.7</span><span class="l">module grade</span></div>
+        </div>
+        <div class="tags">
+          <span>DVC</span><span>MLflow</span><span>Docker</span><span>FastAPI</span><span class="warm">VDE-SPEC 90012</span>
+        </div>
+        <span class="locked">Repository private: client production data is in its history</span>
+      </article>
+
+      <article class="proj up" data-tags="de">
+        <div class="proj-top">
+          <span class="proj-no">06</span>
+        </div>
+        <h3>Air and Weather Quality Monitor</h3>
+        <p class="desc">
+          A scheduled ETL collecting air quality and weather data for twelve cities across Germany and
+          India into Supabase PostgreSQL, with a Streamlit and Plotly dashboard on top. Built together
+          with Abhimanyu Kanase.
+        </p>
+        <div class="kpis">
+          <div class="kpi"><span class="n">12</span><span class="l">cities, two countries</span></div>
+          <div class="kpi"><span class="n">2</span><span class="l">live source APIs</span></div>
+        </div>
+        <div class="tags">
+          <span>Python</span><span>PostgreSQL</span><span>Supabase</span><span>Streamlit</span><span>Plotly</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-top up">
+      <div class="sec-tag">Tech stack</div>
+      <h2>Skills</h2>
+      <p>Tools I have shipped something with, not tools I have read about.</p>
+    </div>
+    <div class="skillset">
+      <div class="up">
+        <div class="skill-head">Pipelines &amp; orchestration</div>
+        <div class="pills">
+          <span class="pill">Python</span><span class="pill">SQL</span><span class="pill">Apache Airflow</span>
+          <span class="pill">dbt</span><span class="pill">Apache Kafka</span><span class="pill">Spark Structured Streaming</span>
+          <span class="pill">Pandera</span><span class="pill">pytest</span>
+        </div>
+      </div>
+      <div class="up">
+        <div class="skill-head">Warehouses &amp; cloud</div>
+        <div class="pills">
+          <span class="pill">BigQuery</span><span class="pill">DuckDB</span><span class="pill">PostgreSQL</span>
+          <span class="pill">Google Cloud</span><span class="pill">Terraform</span><span class="pill">Docker</span>
+        </div>
+      </div>
+      <div class="up">
+        <div class="skill-head">Analytics &amp; reporting</div>
+        <div class="pills">
+          <span class="pill">Power BI</span><span class="pill">DAX</span><span class="pill">TMDL &amp; PBIR</span>
+          <span class="pill">Excel</span><span class="pill">openpyxl</span><span class="pill">Plotly</span>
+        </div>
+      </div>
+      <div class="up">
+        <div class="skill-head">Applied AI &amp; services</div>
+        <div class="pills">
+          <span class="pill">MCP servers</span><span class="pill">LangGraph</span><span class="pill">FastAPI</span>
+          <span class="pill">Streamlit</span><span class="pill">MLflow</span><span class="pill">DVC</span>
+          <span class="pill">GitHub Actions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="wrap">
+    <div class="sec-top up">
+      <div class="sec-tag">Qualifications</div>
+      <h2>Education &amp; certificates</h2>
+    </div>
+    <div class="certs">
+      <div class="cert up">
+        <div class="nm">M.Sc. Data Science</div>
+        <div class="is">Hochschule Fulda, Germany</div>
+        <span class="bd">In progress</span>
+      </div>
+      <div class="cert up">
+        <div class="nm">B.E. Information Science and Engineering</div>
+        <div class="is">Visvesvaraya Technological University</div>
+        <span class="bd">Grade 1.7</span>
+      </div>
+      <div class="cert up">
+        <div class="nm">IBM Data Science Professional Certificate</div>
+        <div class="is">IBM via Coursera</div>
+        <span class="bd">Professional Certificate</span>
+      </div>
+      <div class="cert up">
+        <div class="nm">Google Cloud Career Readiness</div>
+        <div class="is">Associate Cloud Engineer track</div>
+        <span class="bd">Completed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-top up">
+      <div class="sec-tag">Get in touch</div>
+      <h2>Let&rsquo;s talk about the data problem you actually have.</h2>
+    </div>
+    <div class="contact">
+      <div class="up">
+        <p>
+          I am looking for working student and internship roles in data engineering, analytics and
+          applied AI. If something here is close to what your team works on, I would rather hear about
+          the awkward part of your pipeline than the polished version.
+        </p>
+        <p>
+          Based in Fulda and willing to relocate anywhere in Germany.
+        </p>
+        <div class="avail">
+          <span>Availability</span>
+          20 hours a week as a working student &middot; 40 hours a week for an internship
+        </div>
+      </div>
+      <div class="links up">
+        <a class="lnk" href="mailto:suhas3908@gmail.com">
+          <span class="ic w">@</span>
+          <span><b>Email</b><s>suhas3908@gmail.com</s></span>
+        </a>
+        <a class="lnk" href="https://www.linkedin.com/in/suhas-nu-34840a217/">
+          <span class="ic">in</span>
+          <span><b>LinkedIn</b><s>suhas-nu</s></span>
+        </a>
+        <a class="lnk" href="https://github.com/suhasnu">
+          <span class="ic">GH</span>
+          <span><b>GitHub</b><s>github.com/suhasnu</s></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:space-between;width:100%">
+    <span>&copy; 2026 Suhas Nandihalli Umesh</span>
+    <span class="mono">BUILT WITH HTML, CSS AND VANILLA JAVASCRIPT</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* scroll progress + nav state */
+  var bar = document.getElementById("progress");
+  var nav = document.getElementById("nav");
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + "%";
+    nav.classList.toggle("stuck", window.scrollY > 10);
+  }
+  onScroll();
+  window.addEventListener("scroll", onScroll, {passive:true});
+
+  /* scrollspy */
+  var links = [].slice.call(document.querySelectorAll(".nav-links a"));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute("href")); });
+  if ("IntersectionObserver" in window){
+    var spy = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        links.forEach(function(a,i){ a.classList.toggle("active", secs[i] === e.target); });
+      });
+    }, {rootMargin:"-45% 0px -50% 0px"});
+    secs.forEach(function(s){ if(s) spy.observe(s); });
+  }
+
+  /* reveal */
+  var ups = [].slice.call(document.querySelectorAll(".up"));
+  if (reduce || !("IntersectionObserver" in window)){
+    ups.forEach(function(el){ el.classList.add("seen"); });
+  } else {
+    var ro = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add("seen"); ro.unobserve(e.target); }
+      });
+    }, {threshold:0.08, rootMargin:"0px 0px -6% 0px"});
+    ups.forEach(function(el){ ro.observe(el); });
+    setTimeout(function(){ ups.forEach(function(el){ el.classList.add("seen"); }); }, 3000);
+  }
+
+  /* counters */
+  function fmt(n){ return n.toLocaleString("en-GB"); }
+  var nums = [].slice.call(document.querySelectorAll("[data-to]"));
+  function tick(el){
+    var to = parseFloat(el.getAttribute("data-to"));
+    var sfx = el.getAttribute("data-suffix") || "";
+    if (reduce){ el.textContent = fmt(to) + sfx; return; }
+    var t0 = performance.now(), dur = 1300;
+    (function step(now){
+      var p = Math.min(1,(now - t0)/dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(to * e)) + (p === 1 ? sfx : "");
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  if ("IntersectionObserver" in window){
+    var co = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ tick(e.target); co.unobserve(e.target); } });
+    }, {threshold:0.4});
+    nums.forEach(function(el){ co.observe(el); });
+  } else { nums.forEach(tick); }
+
+  /* project filter */
+  var chips = [].slice.call(document.querySelectorAll(".chip"));
+  var cards = [].slice.call(document.querySelectorAll("#projects-grid .proj"));
+  chips.forEach(function(c){
+    c.addEventListener("click", function(){
+      var f = c.getAttribute("data-f");
+      chips.forEach(function(o){ o.setAttribute("aria-pressed", String(o === c)); });
+      cards.forEach(function(card){
+        var show = f === "all" || (" " + card.getAttribute("data-tags") + " ").indexOf(" " + f + " ") > -1;
+        card.classList.toggle("gone", !show);
+      });
+    });
+  });
+
+  /* hero: perspective grid horizon with drifting markers */
+  var cv = document.getElementById("grid-canvas");
+  var ctx = cv.getContext("2d");
+  var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2), raf = null, t = 0;
+  var marks = [];
+  var pointer = {x:0.5, y:0.5, tx:0.5, ty:0.5};
+
+  function resize(){
+    var r = cv.getBoundingClientRect();
+    W = r.width; H = r.height;
+    cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    marks = [];
+    var n = Math.max(10, Math.min(26, Math.round(W/70)));
+    for (var i=0;i<n;i++){
+      marks.push({x:Math.random(), z:Math.random(), s:0.00028 + Math.random()*0.00055});
+    }
+  }
+
+  function draw(){
+    t += 0.0022;
+    ctx.clearRect(0,0,W,H);
+    pointer.x += (pointer.tx - pointer.x) * 0.06;
+    pointer.y += (pointer.ty - pointer.y) * 0.06;
+
+    var hy = H * 0.64;                      // horizon line
+    var cx = W * (0.5 + (pointer.x - 0.5) * 0.08);
+
+    /* vanishing-point rays */
+    ctx.lineWidth = 1;
+    for (var i = -16; i <= 16; i++){
+      var spread = i * (W / 11);
+      ctx.strokeStyle = "rgba(77,163,255," + (0.085 - Math.abs(i) * 0.0035) + ")";
+      if (0.085 - Math.abs(i) * 0.0035 <= 0) continue;
+      ctx.beginPath();
+      ctx.moveTo(cx, hy);
+      ctx.lineTo(cx + spread, H);
+      ctx.stroke();
+    }
+
+    /* receding rules, spaced so they bunch toward the horizon */
+    for (var k = 1; k <= 16; k++){
+      var f = (k + (t * 6 % 1)) / 16;
+      var y = hy + Math.pow(f, 2.3) * (H - hy);
+      if (y > H) continue;
+      var a = 0.1 * (1 - f) + 0.012;
+      ctx.strokeStyle = "rgba(143,198,255," + a + ")";
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    /* horizon glow */
+    var g = ctx.createLinearGradient(0, hy - 90, 0, hy + 10);
+    g.addColorStop(0, "rgba(77,163,255,0)");
+    g.addColorStop(1, "rgba(77,163,255,0.1)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, hy - 90, W, 100);
+    ctx.strokeStyle = "rgba(143,198,255,0.22)";
+    ctx.beginPath(); ctx.moveTo(0, hy); ctx.lineTo(W, hy); ctx.stroke();
+
+    /* slow markers rising above the horizon, like points on a chart */
+    for (var m = 0; m < marks.length; m++){
+      var p = marks[m];
+      p.z += p.s;
+      if (p.z > 1) { p.z = 0; p.x = Math.random(); }
+      var yy = hy - Math.pow(p.z, 1.6) * hy * 0.92;
+      var xx = p.x * W + (pointer.x - 0.5) * 26 * p.z;
+      var al = 0.42 * (1 - p.z);
+      ctx.fillStyle = "rgba(242,163,60," + (al * 0.55) + ")";
+      if (m % 3 === 0) ctx.fillStyle = "rgba(79,209,165," + (al * 0.6) + ")";
+      ctx.beginPath(); ctx.arc(xx, yy, 1.5 + (1 - p.z) * 1.1, 0, Math.PI*2); ctx.fill();
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  function start(){ resize(); if (reduce){ draw(); cancelAnimationFrame(raf); raf = null; return; } if (!raf) raf = requestAnimationFrame(draw); }
+  function stop(){ if (raf){ cancelAnimationFrame(raf); raf = null; } }
+
+  start();
+  window.addEventListener("resize", resize, {passive:true});
+  window.addEventListener("pointermove", function(e){
+    pointer.tx = e.clientX / window.innerWidth;
+    pointer.ty = e.clientY / window.innerHeight;
+  }, {passive:true});
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden) stop(); else if (!reduce) start();
+  });
+})();
+</script>
+</body>
+</html>
