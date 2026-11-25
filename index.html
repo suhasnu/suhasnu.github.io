@@ -177,6 +177,16 @@ section + section{border-top:1px solid var(--panel-line)}
 @media(max-width:880px){.about{grid-template-columns:1fr;gap:38px}}
 .about p{color:var(--muted);margin-bottom:17px}
 .about p strong{color:var(--ink);font-weight:500}
+.portrait{
+  position:relative;border:1px solid var(--panel-line);border-radius:18px;overflow:hidden;
+  margin-bottom:14px;background:var(--bg-2);
+}
+.portrait img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.portrait figcaption{
+  position:absolute;left:0;right:0;bottom:0;padding:30px 18px 14px;
+  background:linear-gradient(to top,rgba(7,11,18,.94),transparent);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+}
 .panelcards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .pc{
   background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;padding:22px 20px;
@@ -411,11 +421,17 @@ footer .mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
           tests that record a discrepancy instead of hiding it.
         </p>
       </div>
-      <div class="panelcards up">
+      <div class="up">
+      <figure class="portrait">
+        <img src="portrait.jpg" alt="Portrait of Suhas Nandihalli Umesh" width="900" height="900">
+        <figcaption>Suhas Nandihalli Umesh &middot; Fulda, Germany</figcaption>
+      </figure>
+      <div class="panelcards">
         <div class="pc"><span class="k">Based in</span><div class="v">Fulda, <em>Hessen</em></div></div>
         <div class="pc"><span class="k">Studying</span><div class="v">M.Sc. <em>Data Science</em></div></div>
         <div class="pc"><span class="k">Experience</span><div class="v"><em>1.5</em> years</div></div>
         <div class="pc"><span class="k">Languages</span><div class="v">EN <em>C1</em> &middot; DE <em>B1</em></div></div>
+      </div>
       </div>
     </div>
   </div>
