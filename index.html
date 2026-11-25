@@ -37,7 +37,7 @@ body{
   html{scroll-behavior:auto}
   *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
 }
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 a{text-decoration:none;color:inherit}
 :focus-visible{outline:2px solid var(--azure);outline-offset:3px;border-radius:4px}
 ::selection{background:rgba(77,163,255,.3)}
@@ -181,7 +181,7 @@ section + section{border-top:1px solid var(--panel-line)}
   position:relative;border:1px solid var(--panel-line);border-radius:18px;overflow:hidden;
   margin-bottom:14px;background:var(--bg-2);
 }
-.portrait img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.portrait img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;display:block}
 .portrait figcaption{
   position:absolute;left:0;right:0;bottom:0;padding:30px 18px 14px;
   background:linear-gradient(to top,rgba(7,11,18,.94),transparent);
